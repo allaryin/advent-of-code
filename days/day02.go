@@ -15,18 +15,40 @@ func (d *Day02) Name() string {
 
 func (d *Day02) Run() (err error) {
 	values := strings.Split(d.data, "\n")
+
+	// part 1 is a simple "checksum"
 	c := d.checksum(values)
-	fmt.Printf("part 1 = %d\n",c)
+	fmt.Printf("part 1 = %d\n", c)
+
+	// part 2 is an evil n^2 string compare
+	// there has to be a faster way of doing this (turn the strings into numbers somehow...) but meh, brute force it is
+	for a := 0; a < len(values); a++ {
+		for b := a + 1; b < len(values); b++ {
+			if idx, ok := d.delta(values[a], values[b]); ok {
+				fmt.Printf("(\nidx = %d\n  a = %s\n  b = %s\n)\n", idx, values[a], values[b])
+				var sa, sb string
+				if idx > 0 {
+					sa = values[a][:idx]
+				}
+				if idx < len(values) {
+					sb = values[b][idx+1:]
+				}
+				fmt.Printf("part 2 = %s%s\n", sa, sb)
+				return
+			}
+		}
+	}
+
 	return
 }
 
 func (d *Day02) checksum(values []string) int {
 	t2, t3 := 0, 0
 	for _, str := range values {
-		if d.count(str,2) {
+		if d.count(str, 2) {
 			t2++
 		}
-		if d.count(str,3) {
+		if d.count(str, 3) {
 			t3++
 		}
 	}
@@ -50,6 +72,20 @@ func (d *Day02) count(str string, amt int) bool {
 		}
 	}
 	return false
+}
+
+func (d *Day02) delta(a string, b string) (idx int, ok bool) {
+	for k := 0; k < len(a); k++ {
+		if a[k] != b[k] {
+			if ok {
+				return -1, false
+			} else {
+				idx = k
+				ok = true
+			}
+		}
+	}
+	return
 }
 
 func (d *Day02) Init() {
