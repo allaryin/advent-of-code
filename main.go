@@ -9,6 +9,7 @@ import (
 func main() {
 	tests := []days.AdventDay{
 		&days.Day01{},
+		&days.Day02{},
 	}
 
 	for n, test := range tests {
