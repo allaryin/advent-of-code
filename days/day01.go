@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+var ErrUnsupportedCalibrationOperator = errors.New("ErrUnsupportedCalibrationOperator")
+
 type Day01 struct {
 	data string
 }
@@ -26,7 +28,7 @@ func (d *Day01) Run() (err error) {
 func (d *Day01) part1() (err error) {
 	total := 0
 	values := strings.Split(d.data, "\n")
-	for _, v := range values {
+	for i, v := range values {
 		v = strings.TrimSpace(v)
 		if amt, e := strconv.Atoi(v[1:]); e != nil {
 			return e
@@ -40,7 +42,11 @@ func (d *Day01) part1() (err error) {
 				total -= amt
 			default:
 				fmt.Print("?")
-				return errors.New("unsupported operator")
+				return ErrUnsupportedCalibrationOperator
+			}
+			// word wrap
+			if i % 80 == 79 {
+				fmt.Println()
 			}
 		}
 	}
@@ -60,14 +66,11 @@ func (d *Day01) part2() (err error) {
 			} else {
 				switch v[0] {
 				case '+':
-					fmt.Print("+")
 					total += amt
 				case '-':
-					fmt.Print("-")
 					total -= amt
 				default:
-					fmt.Print("?")
-					return errors.New("unsupported operator")
+					return ErrUnsupportedCalibrationOperator
 				}
 
 				if _, alreadySeen := seen[total]; alreadySeen {
@@ -78,6 +81,7 @@ func (d *Day01) part2() (err error) {
 				}
 			}
 		}
+		fmt.Print("*")
 	}
 }
 

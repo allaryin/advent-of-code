@@ -18,5 +18,6 @@ func main() {
 		if err := test.Run(); err != nil {
 			fmt.Printf("!! %v\n", err.Error())
 		}
+		fmt.Println()
 	}
 }
